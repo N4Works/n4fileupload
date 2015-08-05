@@ -1,0 +1,31 @@
+{
+  "name": "n4Fileupload",
+  "main": ["dist/n4fileupload.js","dist/n4fileupload.css"],
+  "version": "0.0.1",
+  "homepage": "https://github.com/N4Works/n4fileupload.git",
+  "authors": ["N4Works <contato@n4works.com>"],
+  "description": "desc",
+  "keywords": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    ".idea",
+    ".gitignore",
+    "node_modules",
+    "tests",
+    "LICENSE",
+    "bower_components",
+    "coverage",
+    "gulpfile.js",
+    "package.json",
+    "*.conf.js"
+  ],
+  "dependencies": {
+    "angular": ">=1.0.8"
+  },
+  "devDependencies":
+  {
+    "angular-mocks": ">=1.0.8"
+  }
+
+}
