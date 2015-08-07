@@ -31,12 +31,8 @@
 
             element.on('change', function (event) {
               service.send(event.target.files)
-                .then(function (urls) {
-                  if (attrs.multiple) {
-                    controller.$setViewValue(urls);
-                  } else {
-                    controller.$setViewValue(urls[0]);
-                  }
+                .then(function (data) {
+                  controller.$setViewValue(data);
                   scope.notify();
                 });
             });
