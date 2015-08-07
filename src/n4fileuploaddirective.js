@@ -13,10 +13,22 @@
           require: 'ngModel',
           restrict: 'A',
           scope: {
-            notificar: '&n4FileUploadDirective'
+            text: '@',
+            notify: '&n4FileUploadDirective'
           },
+          template: [
+            '<label>',
+            '  <figure></figure>',
+            '  {{text}}',
+            '  <input class="bt-arquivo" type="file"/>',
+            '</label>'
+          ].join(''),
           replace: true,
           link: function (scope, element, attrs, controller) {
+            element.find('label').addClass(attrs.buttonClass);
+            element.find('figure').addClass(attrs.iconClass);
+            element.find('input').addClass(attrs.inputClass);
+
             element.on('change', function (event) {
               service.send(event.target.files)
                 .then(function (urls) {
@@ -25,7 +37,7 @@
                   } else {
                     controller.$setViewValue(urls[0]);
                   }
-                  scope.notificar();
+                  scope.notify();
                 });
             });
 
