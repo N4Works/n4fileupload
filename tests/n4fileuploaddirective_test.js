@@ -25,7 +25,7 @@ describe('n4FileUploadDirective', function () {
     var element;
 
     beforeEach(function () {
-      var html = '<div n4-file-upload-directive="notify()" ng-model="data"></div>';
+      var html = '<div n4-file-upload-directive="notify()" ng-model="data" button-class="bt" icon-class="icon" input-class="file-input" text="Send file"></div>';
 
       element = angular.element(html);
 
@@ -36,6 +36,16 @@ describe('n4FileUploadDirective', function () {
     it('should be able to read the element', function () {
       expect(element.on).toHaveBeenCalled();
       expect(element).toBeDefined();
+    });
+
+    it('should have the classes', function () {
+      expect(element.hasClass('bt')).toBeTruthy();
+      expect(element.find('figure').hasClass('icon')).toBeTruthy();
+      expect(element.find('input').hasClass('file-input')).toBeTruthy();
+    });
+
+    it('should have the text', function () {
+      expect(element.find('span').html()).toBe('Send file');
     });
   });
 

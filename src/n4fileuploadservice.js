@@ -9,23 +9,30 @@
       this.endpoint = '';
 
       this.$get = [
-        '$http',
-        function ($http) {
+        'Upload',
+        '$q',
+        function (Upload, $q) {
           return {
             send: function (files, endpoint) {
-              var formData = new FormData();
+              var deferred = $q.defer();
+
+              var progress= [];
+              var promises = [];
               for (var i = (files.length - 1); i >= 0; i -= 1) {
-                formData.append('file_' + i, files[i]);
+                progress.unshift({});
+                promises.push(Upload.upload({
+                  url: endpoint || self.endpoint,
+                  file: files[i]
+                }).then(null, null, function (event) {
+                  progress[i].loaded = event.loaded;
+                  progress[i].total = event.total;
+                  deferred.notify(progress);
+                }));
               }
 
-              return $http({
-                method: 'POST',
-                url: endpoint || self.endpoint,
-                headers: {'Content-Type': undefined},
-                data: formData
-              }).then(function (response) {
-                return response.data;
-              });
+              $q.all(promises).then(deferred.resolve, deferred.reject);
+
+              return deferred.promise;
             },
             delete: function (fileUrl, endpoint) {
               return $http.delete(endpoint || self.endpoint, {params: {url: fileUrl}})

@@ -26,7 +26,9 @@
     "*.conf.js"
   ],
   "dependencies": {
-    "angular": ">=1.0.8"
+    "angular": ">=1.0.8",
+    "ng-file-upload": "~6.0.4",
+    "ng-file-upload-shim": "~6.0.4"
   },
   "devDependencies": {
     "angular-mocks": ">=1.0.8",

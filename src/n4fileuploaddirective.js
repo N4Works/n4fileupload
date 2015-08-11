@@ -8,7 +8,9 @@
     .directive('n4FileUploadDirective', [
       '$timeout',
       'n4FileUploadService',
-      function ($timeout, service) {
+      '$q',
+      '$log',
+      function ($timeout, service, $q, $log) {
         return {
           require: 'ngModel',
           restrict: 'A',
@@ -19,21 +21,38 @@
           template: [
             '<label>',
             '  <figure></figure>',
-            '  {{text}}',
+            '  <span ng-bind="text">Send</span>',
+            '  <progress value="{{value}}" max="{{max}}"></progress>',
             '  <input class="bt-arquivo" type="file"/>',
             '</label>'
           ].join(''),
           replace: true,
           link: function (scope, element, attrs, controller) {
-            element.find('label').addClass(attrs.buttonClass);
+            element.addClass(attrs.buttonClass);
             element.find('figure').addClass(attrs.iconClass);
-            element.find('input').addClass(attrs.inputClass);
+            var input = element.find('input');
+            input.addClass(attrs.inputClass);
+
+            if (!!attrs.multiple) {
+              input.attr('multiple', 'multiple');
+            }
 
             element.on('change', function (event) {
+              element.addClass('sending');
               service.send(event.target.files)
                 .then(function (data) {
                   controller.$setViewValue(data);
                   scope.notify();
+                }, function (e) {
+                  $log.error(e);
+                  return $q.reject('Ops, ocorreu uma falha ao tentar gravar o arquivo: ' + e.message);
+                }, function (event) {
+                  scope.max = event.total;
+                  scope.value = event.loaded;
+                  console.log(event);
+                })
+                .finally(function () {
+                  element.removeClass('sending');
                 });
             });
 

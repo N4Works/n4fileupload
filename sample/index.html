@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="n4FileUploadApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Sample N4FileUpload</title>
+</head>
+<body ng-controller="RootController as ctrl">
+  {{ctrl.files}}
+  <div n4-file-upload-directive="ctrl.notify()" ng-model="ctrl.files" text="Send file" multiple="true"></div>
+</body>
+<script src="../bower_components/angular/angular.js"></script>
+<script src="../bower_components/ng-file-upload/ng-file-upload.js"></script>
+<script src="../bower_components/ng-file-upload/ng-file-upload-shim.js"></script>
+<script src="../src/n4fileuploadservice.js"></script>
+<script src="../src/n4fileuploaddirective.js"></script>
+<script src="../src/n4fileupload.js"></script>
+<script>
+  'use strict';
+  angular.module('n4FileUploadApp', ['n4FileUpload'])
+    .config(function (n4FileUploadServiceProvider) {
+      n4FileUploadServiceProvider.endpoint = 'http://localhost:3000/api/upload/';
+    })
+    .controller('RootController', function () {
+      var self = this;
+      self.files = [];
+      self.notify = function () {
+        console.log(self.files);
+        console.log('It\'s done!');
+      };
+    });
+</script>
+</html>
