@@ -1,0 +1,75 @@
+.sending .bt {
+  background: #ddd;
+  opacity: 0.7;
+  transform: scale(1)!important;
+  transition: none;
+  box-shadow: none!important;
+}
+
+.bt {
+  display: inline-block;
+  padding: 15px;
+  background: #fff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  transition: all .1s ease;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin: 5px 0;
+  cursor: pointer;
+  border-radius: 2px;
+  border: 1px solid #e1e2e3;
+  color: #555;
+  font: inherit;
+}
+
+.bt-input {
+  position: absolute;
+  visibility: hidden;
+}
+
+.bt:hover {
+  transform: scale(1.1);
+  -webkit-transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.bt:active {
+  transform: scale(.99);
+  -webkit-transform: scale(.99);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.bt.bt-block {
+  display: block;
+  text-align: center;
+}
+
+label {
+  color: #61ac00;
+  font-size: .9em;
+}
+
+ul.files {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: inline;
+}
+
+.files li {
+  display: inline-block;
+  text-decoration: none;
+  color: #555;
+  padding: 5px 10px;
+  border-radius: 2px;
+  transition: all .1s ease;
+  word-break: break-all;
+}
+
+.files li:hover {
+  color: #61ac00
+}
+
+.files li:active {
+  background-color: #ebf2e2
+}

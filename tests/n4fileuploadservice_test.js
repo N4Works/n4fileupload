@@ -19,7 +19,7 @@ describe('n4FileUploadService', function()
 
   describe('service', function () {
     var _http, _httpBackend, _URL;
-    var n4FileUploadService;
+    var n4FileUploadService, _Upload;
 
     beforeEach(module('n4FileUpload.services', function (n4FileUploadServiceProvider) {
       _URL = 'http://endpoint/';
@@ -29,28 +29,33 @@ describe('n4FileUploadService', function()
     beforeEach(inject(function ($injector) {
       n4FileUploadService = $injector.get('n4FileUploadService');
       _http = $injector.get('$http');
+      _Upload = $injector.get('Upload');
       _httpBackend = $injector.get('$httpBackend');
     }));
 
     describe('post', function () {
-      it('should send data as FormData and return promise', function () {
-        _httpBackend.expectPOST(_URL, function (parametro) {
-          return parametro instanceof FormData;
-        }).respond(201);
-
-        expect(n4FileUploadService.send([ {} ])).toBeDefined();
-
-        _httpBackend.flush();
+      beforeEach(function () {
+        spyOn(_Upload, 'upload').and.callFake(function () {
+          return {};
+        });
       });
-    });
 
-    describe('delete', function () {
-      it('should be able to delete a file by URL', function () {
-        _httpBackend.expectDELETE(_URL + '?url=url_de_delecao').respond(204);
+      it('should call upload from Upload with provider endpoint and file', function () {
+        var file = {};
+        expect(n4FileUploadService.send(file)).toBeDefined();
+        expect(_Upload.upload).toHaveBeenCalledWith({
+          url: _URL,
+          file: file
+        });
+      });
 
-        expect(n4FileUploadService.delete('url_de_delecao')).toBeDefined();
-
-        _httpBackend.flush();
+      it('should call upload from Upload with parameter endpoint and file', function () {
+        var file = {};
+        expect(n4FileUploadService.send(file, 'endpoint')).toBeDefined();
+        expect(_Upload.upload).toHaveBeenCalledWith({
+          url: 'endpoint',
+          file: file
+        });
       });
     });
   });

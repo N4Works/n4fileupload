@@ -20,6 +20,10 @@ var _karma = function(config)
 
       'bower_components/angular/angular.js',
 
+      'bower_components/ng-file-upload/ng-file-upload.js',
+
+      'bower_components/ng-file-upload/ng-file-upload-shim.js',
+
       'bower_components/angular-mocks/angular-mocks.js',
 
       'src/**/*.js',

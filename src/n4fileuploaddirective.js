@@ -13,51 +13,77 @@
       function ($timeout, service, $q, $log) {
         return {
           require: 'ngModel',
-          restrict: 'A',
+          restrict: 'AE',
+          replace: true,
+          transclude: true,
           scope: {
-            text: '@',
-            notify: '&n4FileUploadDirective'
+            onStart: '&',
+            onFinish: '&'
           },
           template: [
-            '<label>',
-            '  <figure></figure>',
-            '  <span ng-bind="text">Send</span>',
-            '  <progress value="{{value}}" max="{{max}}"></progress>',
-            '  <input class="bt-arquivo" type="file"/>',
-            '</label>'
+            '<div>',
+            '  <label class="bt">',
+            '    <span ng-transclude=""></span>',
+            '    <input class="bt-input" type="file"/>',
+            '  </label>',
+            '  <ul class="files">',
+            '    <li ng-repeat="file in files">',
+            '      <span ng-bind="file.name"></span>',
+            '      <span ng-bind="file.progress"></span>',
+            '    </li>',
+            '  <ul>',
+            '</div>'
           ].join(''),
-          replace: true,
           link: function (scope, element, attrs, controller) {
-            element.addClass(attrs.buttonClass);
-            element.find('figure').addClass(attrs.iconClass);
             var input = element.find('input');
-            input.addClass(attrs.inputClass);
 
             if (!!attrs.multiple) {
               input.attr('multiple', 'multiple');
             }
 
-            element.on('change', function (event) {
+            scope.files = [];
+            input.on('change', function (event) {
+              scope.onStart();
+
               element.addClass('sending');
-              service.send(event.target.files)
-                .then(function (data) {
-                  controller.$setViewValue(data);
-                  scope.notify();
-                }, function (e) {
-                  $log.error(e);
-                  return $q.reject('Ops, ocorreu uma falha ao tentar gravar o arquivo: ' + e.message);
-                }, function (event) {
-                  scope.max = event.total;
-                  scope.value = event.loaded;
-                  console.log(event);
+              input.prop('disabled', true);
+
+              var promises = [],
+                files = event.target.files,
+                promise;
+              for (var i = (files.length - 1); i >= 0; i -= 1) {
+                scope.files.push(files[i]);
+
+                promise = service.send(files[i])
+                  .then(null,
+                  function (e) {
+                    $log.error(e);
+                  }, function (event) {
+                    var file = event.config.file;
+                    file.progress = parseInt(event.loaded * 100 / event.total, 10) + '%';
+                  });
+
+                promises.push(promise);
+              }
+
+              $q.all(promises)
+                .then(function (responses) {
+                  var data = responses.map(function (x) {
+                    return x.data[0];
+                  });
+                  if (!!controller) {
+                    controller.$setViewValue(data);
+                  }
                 })
                 .finally(function () {
                   element.removeClass('sending');
+                  input.prop('disabled', false);
+                  scope.onFinish();
                 });
             });
 
             scope.$on('$destroy', function () {
-              element.off('change');
+              input.off('change');
             });
           }
         };

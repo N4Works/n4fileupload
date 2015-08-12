@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="n4FileUploadApp">
 <head>
-    <meta charset="UTF-8">
-    <title>Sample N4FileUpload</title>
+  <meta charset="UTF-8">
+  <title>Sample N4FileUpload</title>
+  <link rel="stylesheet" href="../src/n4fileupload.css">
 </head>
 <body ng-controller="RootController as ctrl">
-  {{ctrl.files}}
-  <div n4-file-upload-directive="ctrl.notify()" ng-model="ctrl.files" text="Send file" multiple="true"></div>
+{{ctrl.files}}
+<n4-file-upload-directive on-start="ctrl.onStart()" on-finish="ctrl.onFinish()" ng-model="ctrl.files" text="Send file" multiple="true">
+  Send file
+</n4-file-upload-directive>
 </body>
 <script src="../bower_components/angular/angular.js"></script>
 <script src="../bower_components/ng-file-upload/ng-file-upload.js"></script>
@@ -23,9 +26,11 @@
     .controller('RootController', function () {
       var self = this;
       self.files = [];
-      self.notify = function () {
-        console.log(self.files);
-        console.log('It\'s done!');
+      self.onStart = function () {
+        console.log('Started');
+      };
+      self.onFinish = function () {
+        console.log('Finished');
       };
     });
 </script>
