@@ -71,10 +71,8 @@
                   var data = responses.map(function (x) {
                     return x.data[0];
                   });
-                  if (!!controller) {
-                    controller.$setViewValue(data);
-                  }
-                })
+                  controller.$setViewValue(data);
+              })
                 .finally(function () {
                   element.removeClass('sending');
                   input.prop('disabled', false);
