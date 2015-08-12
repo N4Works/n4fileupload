@@ -3,20 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <title>Sample N4FileUpload</title>
-  <link rel="stylesheet" href="../src/n4fileupload.css">
+  <link rel="stylesheet" href="../dist/n4fileupload.min.css">
 </head>
 <body ng-controller="RootController as ctrl">
 {{ctrl.files}}
-<n4-file-upload-directive on-start="ctrl.onStart()" on-finish="ctrl.onFinish()" ng-model="ctrl.files" text="Send file" multiple="true">
+<n4-file-upload-directive on-start="ctrl.onStart()" on-finish="ctrl.onFinish()" ng-model="ctrl.files" text="Send file">
   Send file
 </n4-file-upload-directive>
 </body>
 <script src="../bower_components/angular/angular.js"></script>
 <script src="../bower_components/ng-file-upload/ng-file-upload.js"></script>
 <script src="../bower_components/ng-file-upload/ng-file-upload-shim.js"></script>
-<script src="../src/n4fileuploadservice.js"></script>
-<script src="../src/n4fileuploaddirective.js"></script>
-<script src="../src/n4fileupload.js"></script>
+<script src="../dist/n4fileupload.min.js"></script>
 <script>
   'use strict';
   angular.module('n4FileUploadApp', ['n4FileUpload'])
