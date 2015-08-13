@@ -41,6 +41,9 @@
               input.attr('multiple', 'multiple');
             }
 
+            element.find('label').addClass(attrs.class);
+            element.removeClass();
+
             scope.files = [];
             input.on('change', function (event) {
               scope.onStart();

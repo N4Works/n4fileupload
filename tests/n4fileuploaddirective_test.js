@@ -32,7 +32,7 @@ describe('n4FileUploadDirective', function () {
     var element;
 
     beforeEach(function () {
-      var html = '<n4-file-upload-directive on-start="onStart" on-finish="onFinish" ng-model="data" multiple="true">Send file</n4-file-upload-directive>';
+      var html = '<n4-file-upload-directive class="bt-primary" on-start="onStart" on-finish="onFinish" ng-model="data" multiple="true">Send file</n4-file-upload-directive>';
 
       element = angular.element(html);
 
@@ -51,6 +51,11 @@ describe('n4FileUploadDirective', function () {
 
     it('should have the text', function () {
       expect(element.find('span').html()).toBe('<span class="ng-scope">Send file</span>');
+    });
+
+    it('should copy element classes to label', function () {
+      expect(element.hasClass('bt-primary')).toBeFalsy();
+      expect(element.find('label').hasClass('bt-primary')).toBeTruthy();
     });
   });
 
