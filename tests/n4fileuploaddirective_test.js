@@ -17,6 +17,7 @@ describe('n4FileUploadDirective', function () {
     log = $injector.get('$log');
 
     scope.onStart = jasmine.createSpy();
+    scope.onProgress = jasmine.createSpy();
     scope.onFinish = jasmine.createSpy();
     spyOn($.fn, 'on').and.callThrough();
     spyOn($.fn, 'off').and.callThrough();
@@ -54,8 +55,7 @@ describe('n4FileUploadDirective', function () {
     });
 
     it('should copy element classes to label', function () {
-      expect(element.hasClass('bt-primary')).toBeFalsy();
-      expect(element.find('label').hasClass('bt-primary')).toBeTruthy();
+      expect(element.hasClass('bt-primary')).toBeTruthy();
     });
   });
 
@@ -63,7 +63,7 @@ describe('n4FileUploadDirective', function () {
     var element;
 
     beforeEach(function () {
-      var html = '<n4-file-upload-directive on-start="onStart" on-finish="onFinish" ng-model="data">Send file</n4-file-upload-directive>';
+      var html = '<n4-file-upload-directive on-start="onStart()" on-progress="onProgress" on-finish="onFinish()" ng-model="data">Send file</n4-file-upload-directive>';
 
       element = angular.element(html);
 
@@ -76,7 +76,7 @@ describe('n4FileUploadDirective', function () {
       var file1 = {name:'file1'};
       var file2 = {name:'file2'};
       event.target = {
-        files: [{name:'file1'}, {name:'file2'}]
+        files: [file1, file2]
       };
 
       promiseStub.then.and.callFake(function (success, fail, progress) {
@@ -101,11 +101,78 @@ describe('n4FileUploadDirective', function () {
       expect(element.find('input').addClass).toHaveBeenCalledWith('sending');
       expect(element.find('input').prop).toHaveBeenCalledWith('disabled', true);
 
-      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(event.target.files[0]);
-      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(event.target.files[1]);
+      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(file1, undefined);
+      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(file2, undefined);
       expect(promiseStub.then).toHaveBeenCalled();
-      expect(file1.progress).toEqual('100%');
-      expect(file2.progress).toEqual('100%');
+      expect(scope.onProgress).toHaveBeenCalledWith(file1);
+      expect(scope.onProgress).toHaveBeenCalledWith(file2);
+      expect(file1.progress).toEqual(100);
+      expect(file2.progress).toEqual(100);
+    });
+
+    it('should call onProgress only when is avaiable', function () {
+      var html = '<n4-file-upload-directive on-start="onStart()" on-finish="onFinish()" ng-model="data">Send file</n4-file-upload-directive>';
+
+      element = angular.element(html);
+
+      compile(element)(scope);
+      scope.$digest();
+
+      var event = jQuery.Event('change');
+      var file1 = {name:'file1'};
+      var file2 = {name:'file2'};
+      event.target = {
+        files: [file1, file2]
+      };
+
+      promiseStub.then.and.callFake(function (success, fail, progress) {
+        progress({
+          loaded: 100,
+          total: 100,
+          config: {
+            file: file1
+          }
+        });
+        progress({
+          loaded: 200,
+          total: 200,
+          config: {
+            file: file2
+          }
+        });
+      });
+
+      element.find('input').trigger(event);
+
+      expect(element.find('input').addClass).toHaveBeenCalledWith('sending');
+      expect(element.find('input').prop).toHaveBeenCalledWith('disabled', true);
+      expect(scope.onProgress).not.toHaveBeenCalled();
+      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(file1, undefined);
+      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(file2, undefined);
+      expect(promiseStub.then).toHaveBeenCalled();
+      expect(file1.progress).toEqual(100);
+      expect(file2.progress).toEqual(100);
+    });
+
+    it('should call send with endpoint parameter when is avaiable', function () {
+      var html = '<n4-file-upload-directive endpoint="\/endpoint\" on-start="onStart()" on-finish="onFinish()" ng-model="data">Send file</n4-file-upload-directive>';
+
+      element = angular.element(html);
+
+      compile(element)(scope);
+      scope.$digest();
+
+      var event = jQuery.Event('change');
+      var file1 = {name:'file1'};
+      var file2 = {name:'file2'};
+      event.target = {
+        files: [file1, file2]
+      };
+
+      element.find('input').trigger(event);
+
+      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(file1, '/endpoint');
+      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(file2, '/endpoint');
     });
 
     it('should concatenate all the uploads in one promise', inject(function ($q) {
@@ -117,7 +184,7 @@ describe('n4FileUploadDirective', function () {
         { data: ['file2'] }
       ];
       event.target = {
-        files: [{name:'file1'}, {name:'file2'}]
+        files: [file1, file2]
       };
 
       var promiseAllStub = jasmine.createSpyObj('Promise', ['then', 'finally']);
@@ -137,8 +204,8 @@ describe('n4FileUploadDirective', function () {
       expect(element.find('input').addClass).toHaveBeenCalledWith('sending');
       expect(element.find('input').prop).toHaveBeenCalledWith('disabled', true);
 
-      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(event.target.files[0]);
-      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(event.target.files[1]);
+      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(file1, undefined);
+      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(file2, undefined);
       expect(promiseStub.then).toHaveBeenCalled();
       expect(promiseAllStub.then).toHaveBeenCalled();
       expect(promiseAllStub.finally).toHaveBeenCalled();
@@ -156,7 +223,7 @@ describe('n4FileUploadDirective', function () {
       var file1 = {name:'file1'};
       var file2 = {name:'file2'};
       event.target = {
-        files: [{name:'file1'}, {name:'file2'}]
+        files: [file1, file2]
       };
 
       promiseStub.then.and.callFake(function (success, fail) {
@@ -168,8 +235,8 @@ describe('n4FileUploadDirective', function () {
       expect(element.find('input').addClass).toHaveBeenCalledWith('sending');
       expect(element.find('input').prop).toHaveBeenCalledWith('disabled', true);
 
-      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(event.target.files[0]);
-      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(event.target.files[1]);
+      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(file1, undefined);
+      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(file2, undefined);
       expect(promiseStub.then).toHaveBeenCalled();
       expect(log.error).toHaveBeenCalledWith(error);
     });

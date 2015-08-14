@@ -17,22 +17,16 @@
           replace: true,
           transclude: true,
           scope: {
+            endpoint: '@',
             onStart: '&',
+            onProgress: '=',
             onFinish: '&'
           },
           template: [
-            '<div>',
-            '  <label class="bt">',
-            '    <span ng-transclude=""></span>',
-            '    <input class="bt-input" type="file"/>',
-            '  </label>',
-            '  <ul class="files">',
-            '    <li ng-repeat="file in files">',
-            '      <span ng-bind="file.name"></span>',
-            '      <span ng-bind="file.progress"></span>',
-            '    </li>',
-            '  <ul>',
-            '</div>'
+            '<label class="bt">',
+            '  <span ng-transclude=""></span>',
+            '  <input class="bt-input" type="file"/>',
+            '</label>'
           ].join(''),
           link: function (scope, element, attrs, controller) {
             var input = element.find('input');
@@ -40,9 +34,6 @@
             if (!!attrs.multiple) {
               input.attr('multiple', 'multiple');
             }
-
-            element.find('label').addClass(attrs.class);
-            element.removeClass();
 
             scope.files = [];
             input.on('change', function (event) {
@@ -57,13 +48,16 @@
               for (var i = (files.length - 1); i >= 0; i -= 1) {
                 scope.files.push(files[i]);
 
-                promise = service.send(files[i])
+                promise = service.send(files[i], scope.endpoint)
                   .then(null,
                   function (e) {
                     $log.error(e);
                   }, function (event) {
                     var file = event.config.file;
-                    file.progress = parseInt(event.loaded * 100 / event.total, 10) + '%';
+                    file.progress = parseInt(event.loaded * 100 / event.total, 10);
+                    if (!!scope.onProgress) {
+                      scope.onProgress(file);
+                    }
                   });
 
                 promises.push(promise);

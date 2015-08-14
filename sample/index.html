@@ -7,7 +7,7 @@
 </head>
 <body ng-controller="RootController as ctrl">
 {{ctrl.files}}
-<n4-file-upload-directive on-start="ctrl.onStart()" on-finish="ctrl.onFinish()" ng-model="ctrl.files" text="Send file">
+<n4-file-upload-directive on-start="ctrl.onStart()" on-progress="ctrl.onProgress" on-finish="ctrl.onFinish()" ng-model="ctrl.files" text="Send file">
   Send file
 </n4-file-upload-directive>
 </body>
@@ -26,6 +26,12 @@
       self.files = [];
       self.onStart = function () {
         console.log('Started');
+      };
+      self.onProgress = function (file) {
+        console.log(file.name);
+        console.log(file.loaded);
+        console.log(file.total);
+        console.log(file.progress);
       };
       self.onFinish = function () {
         console.log('Finished');
