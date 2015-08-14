@@ -65,10 +65,15 @@
 
               $q.all(promises)
                 .then(function (responses) {
-                  var data = responses.map(function (x) {
-                    return x.data[0];
-                  });
-                  controller.$setViewValue(data);
+                  try {
+                    var data = responses.map(function (x) {
+                      return x.data[0];
+                    });
+                    controller.$setViewValue(data);
+                  } catch (e) {
+                    $log.error(e);
+                    controller.$setViewValue(responses);
+                  }
               })
                 .finally(function () {
                   element.removeClass('sending');

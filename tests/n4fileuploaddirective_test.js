@@ -217,6 +217,44 @@ describe('n4FileUploadDirective', function () {
       expect(scope.data[1]).toEqual('file2');
     }));
 
+    it('should return server response when some error occured in treatment', inject(function ($q) {
+      var event = jQuery.Event('change');
+      var file1 = {name:'file1'};
+      var file2 = {name:'file2'};
+      var responses = 'Everything is done!';
+      event.target = {
+        files: [file1, file2]
+      };
+
+      var promiseAllStub = jasmine.createSpyObj('Promise', ['then', 'finally']);
+      spyOn($q, 'all').and.returnValue(promiseAllStub);
+
+      promiseAllStub.then.and.callFake(function (success) {
+        success(responses);
+        return promiseAllStub;
+      });
+
+      promiseAllStub.finally.and.callFake(function (callback) {
+        callback();
+      });
+
+      element.find('input').trigger(event);
+
+      expect(element.find('input').addClass).toHaveBeenCalledWith('sending');
+      expect(element.find('input').prop).toHaveBeenCalledWith('disabled', true);
+
+      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(file1, undefined);
+      expect(n4FileUploadServiceStub.send).toHaveBeenCalledWith(file2, undefined);
+      expect(promiseStub.then).toHaveBeenCalled();
+      expect(promiseAllStub.then).toHaveBeenCalled();
+      expect(promiseAllStub.finally).toHaveBeenCalled();
+      expect(element.find('input').removeClass).toHaveBeenCalledWith('sending');
+      expect(element.find('input').prop).toHaveBeenCalledWith('disabled', false);
+      expect(log.error).toHaveBeenCalled();
+      scope.$apply();
+      expect(scope.data).toEqual('Everything is done!');
+    }));
+
     it('should log the error on upload', function () {
       var event = jQuery.Event('change');
       var error = new TypeError('Teste');
