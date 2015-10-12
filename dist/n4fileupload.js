@@ -1,54 +1,54 @@
-"use strict";
-
 ;
-(function (ng) {
-  ng
-    .module('n4FileUpload', ['n4FileUpload.services', 'n4FileUpload.directives'])
-}(angular))
+(function(ng) {
+  "use strict";
 
-'use strict';
-
-(function (ng) {
   ng
-    .module('n4FileUpload.directives', [
-      'n4FileUpload.services'
+    .module("n4FileUpload", ["n4FileUpload.services", "n4FileUpload.directives"])
+}(angular));
+
+(function(ng) {
+  "use strict";
+
+  ng
+    .module("n4FileUpload.directives", [
+      "n4FileUpload.services"
     ])
-    .directive('n4FileUploadDirective', [
-      '$timeout',
-      'n4FileUploadService',
-      '$q',
-      '$log',
-      function ($timeout, service, $q, $log) {
+    .directive("n4FileUploadDirective", [
+      "$timeout",
+      "n4FileUploadService",
+      "$q",
+      "$log",
+      function($timeout, service, $q, $log) {
         return {
-          require: 'ngModel',
-          restrict: 'AE',
+          require: "ngModel",
+          restrict: "AE",
           replace: true,
           transclude: true,
           scope: {
-            endpoint: '@',
-            onStart: '&',
-            onProgress: '=',
-            onFinish: '&'
+            endpoint: "@",
+            onStart: "&",
+            onProgress: "=",
+            onFinish: "&"
           },
           template: [
-            '<label class="bt">',
-            '  <span ng-transclude=""></span>',
-            '  <input class="bt-input" type="file"/>',
-            '</label>'
-          ].join(''),
-          link: function (scope, element, attrs, controller) {
-            var input = element.find('input');
+            "<label class=\"bt\">",
+            "  <span ng-transclude=\"\"></span>",
+            "  <input class=\"bt-input\" type=\"file\"/>",
+            "</label>"
+          ].join(""),
+          link: function(scope, element, attrs, controller) {
+            var input = element.find("input");
 
             if (!!attrs.multiple) {
-              input.attr('multiple', 'multiple');
+              input.attr("multiple", "multiple");
             }
 
             scope.files = [];
-            input.on('change', function (event) {
+            input.on("change", function(event) {
               scope.onStart();
 
-              element.addClass('sending');
-              input.prop('disabled', true);
+              element.addClass("sending");
+              input.prop("disabled", true);
 
               var promises = [],
                 files = event.target.files,
@@ -58,23 +58,24 @@
 
                 promise = service.send(files[i], scope.endpoint)
                   .then(null,
-                  function (e) {
-                    $log.error(e);
-                  }, function (event) {
-                    var file = event.config.file;
-                    file.progress = parseInt(event.loaded * 100 / event.total, 10);
-                    if (!!scope.onProgress) {
-                      scope.onProgress(file);
-                    }
-                  });
+                    function(e) {
+                      $log.error(e);
+                    },
+                    function(event) {
+                      var file = event.config.file;
+                      file.progress = parseInt(event.loaded * 100 / event.total, 10);
+                      if (!!scope.onProgress) {
+                        scope.onProgress(file);
+                      }
+                    });
 
                 promises.push(promise);
               }
 
               $q.all(promises)
-                .then(function (responses) {
+                .then(function(responses) {
                   try {
-                    var data = responses.map(function (x) {
+                    var data = responses.map(function(x) {
                       return x.data[0];
                     });
                     controller.$setViewValue(data);
@@ -82,43 +83,45 @@
                     $log.error(e);
                     controller.$setViewValue(responses);
                   }
-              })
-                .finally(function () {
-                  element.removeClass('sending');
-                  input.prop('disabled', false);
+                })
+                .finally(function() {
+                  element.removeClass("sending");
+                  input.prop("disabled", false);
                   scope.onFinish();
                 });
             });
 
-            scope.$on('$destroy', function () {
-              input.off('change');
+            scope.$on("$destroy", function() {
+              input.off("change");
             });
           }
         };
-      }]);
-}(angular))
-
-"use strict";
+      }
+    ]);
+}(angular));
 
 ;
-(function (ng) {
+(function(ng) {
+  "use strict";
+
   ng
-    .module('n4FileUpload.services', ['ngFileUpload'])
-    .provider('n4FileUploadService', function () {
+    .module("n4FileUpload.services", ["ngFileUpload"])
+    .provider("n4FileUploadService", function() {
       var self = this;
-      this.endpoint = '';
+      this.endpoint = "";
 
       this.$get = [
-        'Upload',
-        function (Upload) {
+        "Upload",
+        function(Upload) {
           return {
-            send: function (file, endpoint) {
+            send: function(file, endpoint) {
               return Upload.upload({
                 url: endpoint || self.endpoint,
                 file: file
               });
             }
           };
-        }];
+        }
+      ];
     });
-}(angular))
+}(angular));
