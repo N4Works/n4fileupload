@@ -33,7 +33,7 @@ describe('n4FileUploadDirective', function () {
     var element;
 
     beforeEach(function () {
-      var html = '<n4-file-upload-directive class="bt-primary" on-start="onStart" on-finish="onFinish" ng-model="data" multiple="true">Send file</n4-file-upload-directive>';
+      var html = '<n4-file-upload class="bt-primary" on-start="onStart" on-finish="onFinish" ng-model="data" multiple="true">Send file</n4-file-upload>';
 
       element = angular.element(html);
 
@@ -63,7 +63,7 @@ describe('n4FileUploadDirective', function () {
     var element;
 
     beforeEach(function () {
-      var html = '<n4-file-upload-directive on-start="onStart()" on-progress="onProgress" on-finish="onFinish()" ng-model="data">Send file</n4-file-upload-directive>';
+      var html = '<n4-file-upload on-start="onStart()" on-progress="onProgress" on-finish="onFinish()" ng-model="data">Send file</n4-file-upload>';
 
       element = angular.element(html);
 
@@ -111,7 +111,7 @@ describe('n4FileUploadDirective', function () {
     });
 
     it('should call onProgress only when is avaiable', function () {
-      var html = '<n4-file-upload-directive on-start="onStart()" on-finish="onFinish()" ng-model="data">Send file</n4-file-upload-directive>';
+      var html = '<n4-file-upload on-start="onStart()" on-finish="onFinish()" ng-model="data">Send file</n4-file-upload>';
 
       element = angular.element(html);
 
@@ -155,7 +155,7 @@ describe('n4FileUploadDirective', function () {
     });
 
     it('should call send with endpoint parameter when is avaiable', function () {
-      var html = '<n4-file-upload-directive endpoint="\/endpoint\" on-start="onStart()" on-finish="onFinish()" ng-model="data">Send file</n4-file-upload-directive>';
+      var html = '<n4-file-upload endpoint="\/endpoint\" on-start="onStart()" on-finish="onFinish()" ng-model="data">Send file</n4-file-upload>';
 
       element = angular.element(html);
 

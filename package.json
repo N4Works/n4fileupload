@@ -1,6 +1,6 @@
 {
-  "name": "n4Fileupload",
-  "version": "0.0.1",
+  "name": "n4FileUpload",
+  "version": "0.0.2",
   "main": ["dist/n4fileupload.js","dist/n4fileupload.css"],
   "scripts":
   {

@@ -5,7 +5,7 @@
     .module("n4FileUpload.directives", [
       "n4FileUpload.services"
     ])
-    .directive("n4FileUploadDirective", [
+    .directive("n4FileUpload", [
       "$timeout",
       "n4FileUploadService",
       "$q",
