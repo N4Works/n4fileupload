@@ -1,9 +1,8 @@
 {
   "name": "n4FileUpload",
   "version": "0.0.2",
-  "main": ["dist/n4fileupload.js","dist/n4fileupload.css"],
-  "scripts":
-  {
+  "main": ["dist/n4fileupload.js", "dist/n4fileupload.css"],
+  "scripts": {
     "test": "gulp coverage"
   },
   "dependencies": {},
@@ -15,25 +14,23 @@
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.2.0",
     "jasmine-core": "^2.3.0",
-    "karma": "^0.12.31",
-    "karma-chrome-launcher": "^0.1.8",
-    "karma-coverage": "^0.3.1",
-    "karma-firefox-launcher": "^0.1.4",
-    "karma-ie-launcher": "^0.1.5",
-    "karma-jasmine": "^0.3.5",
-    "karma-opera-launcher": "^0.1.0",
-    "karma-phantomjs-launcher": "^0.1.4",
+    "karma": "^1.7.0",
+    "karma-chrome-launcher": "^2.1.1",
+    "karma-coverage": "^1.1.1",
+    "karma-firefox-launcher": "^1.0.1",
+    "karma-ie-launcher": "^1.0.0",
+    "karma-jasmine": "^1.1.0",
+    "karma-opera-launcher": "^1.0.0",
+    "karma-phantomjs-launcher": "^1.0.4",
     "karma-safari-launcher": "^0.1.1"
   },
-  "repository":
-  {
+  "repository": {
     "type": "git",
     "url": "https://github.com/N4Works/n4fileupload.git"
   },
   "author": "N4Works <contato@n4works.com>",
   "license": "MIT",
-  "bugs":
-  {
+  "bugs": {
     "url": "https://github.com/N4Works/n4fileupload/issues"
   },
   "homepage": "https://github.com/N4Works/n4fileupload"

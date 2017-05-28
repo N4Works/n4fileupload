@@ -51,7 +51,7 @@ describe('n4FileUploadDirective', function () {
     });
 
     it('should have the text', function () {
-      expect(element.find('span').html()).toBe('<span class="ng-scope">Send file</span>');
+      expect(element.find('span').html()).toBe('Send file');
     });
 
     it('should copy element classes to label', function () {
@@ -73,8 +73,12 @@ describe('n4FileUploadDirective', function () {
 
     it('should update progress on upload', function () {
       var event = jQuery.Event('change');
-      var file1 = {name:'file1'};
-      var file2 = {name:'file2'};
+      var file1 = {
+        name: 'file1'
+      };
+      var file2 = {
+        name: 'file2'
+      };
       event.target = {
         files: [file1, file2]
       };
@@ -119,8 +123,12 @@ describe('n4FileUploadDirective', function () {
       scope.$digest();
 
       var event = jQuery.Event('change');
-      var file1 = {name:'file1'};
-      var file2 = {name:'file2'};
+      var file1 = {
+        name: 'file1'
+      };
+      var file2 = {
+        name: 'file2'
+      };
       event.target = {
         files: [file1, file2]
       };
@@ -163,8 +171,12 @@ describe('n4FileUploadDirective', function () {
       scope.$digest();
 
       var event = jQuery.Event('change');
-      var file1 = {name:'file1'};
-      var file2 = {name:'file2'};
+      var file1 = {
+        name: 'file1'
+      };
+      var file2 = {
+        name: 'file2'
+      };
       event.target = {
         files: [file1, file2]
       };
@@ -177,11 +189,18 @@ describe('n4FileUploadDirective', function () {
 
     it('should concatenate all the uploads in one promise', inject(function ($q) {
       var event = jQuery.Event('change');
-      var file1 = {name:'file1'};
-      var file2 = {name:'file2'};
-      var responses = [
-        { data: ['file1'] },
-        { data: ['file2'] }
+      var file1 = {
+        name: 'file1'
+      };
+      var file2 = {
+        name: 'file2'
+      };
+      var responses = [{
+          data: ['file1']
+        },
+        {
+          data: ['file2']
+        }
       ];
       event.target = {
         files: [file1, file2]
@@ -219,8 +238,12 @@ describe('n4FileUploadDirective', function () {
 
     it('should return server response when some error occured in treatment', inject(function ($q) {
       var event = jQuery.Event('change');
-      var file1 = {name:'file1'};
-      var file2 = {name:'file2'};
+      var file1 = {
+        name: 'file1'
+      };
+      var file2 = {
+        name: 'file2'
+      };
       var responses = 'Everything is done!';
       event.target = {
         files: [file1, file2]
@@ -258,8 +281,12 @@ describe('n4FileUploadDirective', function () {
     it('should log the error on upload', function () {
       var event = jQuery.Event('change');
       var error = new TypeError('Teste');
-      var file1 = {name:'file1'};
-      var file2 = {name:'file2'};
+      var file1 = {
+        name: 'file1'
+      };
+      var file2 = {
+        name: 'file2'
+      };
       event.target = {
         files: [file1, file2]
       };
