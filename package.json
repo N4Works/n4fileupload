@@ -1,6 +1,6 @@
 {
   "name": "n4FileUpload",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "main": ["dist/n4fileupload.js", "dist/n4fileupload.css"],
   "scripts": {
     "test": "gulp coverage"
